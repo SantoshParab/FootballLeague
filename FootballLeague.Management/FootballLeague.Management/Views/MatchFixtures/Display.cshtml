@@ -1,0 +1,98 @@
+﻿@model IEnumerable<FootballLeague.Management.Models.MatchFixture>
+
+@Scripts.Render("~/bundles/jquery")
+@{
+    ViewBag.Title = "Fixtures";
+}
+
+<h2>Fixtures</h2>
+
+<div>
+    @Html.ActionLink("Click Here to Generate New Fixtures", "Create")
+</div>
+@using (Html.BeginForm("SaveFixture", "MatchFixture", Model, FormMethod.Post))
+{
+    <div class="col-md-offset-2 col-md-10">
+    <input type="submit" onclick="saveFixtureCall()" value="Save Fixtures" class="btn btn-default" />
+    </div>
+}
+
+<table class="table">
+    <tr>
+        @*<th>
+                @Html.DisplayNameFor(model => model.HomeTeamID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AwayTeamID)
+            </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.MatchDate)
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.HomeTeam)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AwayTeam)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HomeJerseyColor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AwayJerseyColor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GroundName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.HomeTeamID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AwayTeamID)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.MatchDate)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.HomeTeam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AwayTeam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HomeJerseyColor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AwayJerseyColor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroundName)
+            </td>
+        </tr>
+    }
+
+</table>
+<script type="text/javascript">
+    function saveFixtureCall() {
+        $.ajax({
+            type: "POST",
+            url: '/MatchFixture/SaveFixture',     //your action
+            data: JSON.stringify(@Model.ToList()),   //your form name.it takes all the values of model
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+            }
+        })
+    }
+</script>

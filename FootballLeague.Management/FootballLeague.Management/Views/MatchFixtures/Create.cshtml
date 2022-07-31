@@ -1,0 +1,59 @@
+﻿
+
+@Scripts.Render("~/bundles/jquery")
+@{
+    ViewBag.Title = "Generate Fixture";
+}
+<h2>Generate Fixture</h2>
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.Label("Select Start Date of League")
+                @Html.TextBox("SelectedDate","", new { @readonly = "readonly", @class = "datepicker" })
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <input type="submit" id="btnGenerate" onclick="Validation();" value="Generate Fixture" class="btn btn-default" />
+            </th>
+        </tr>                
+    </table>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".datepicker").datepicker({
+            dateFormat: "dd-mm-yy",
+            changemonth: true,
+            changeyear: true
+        });
+    });
+    $(".datepicker").datepicker({ minDate: 0 });
+    function Validation() {
+        if ($("#SelectedDate").val()=="") {
+            alert("Please Select Date");
+            event.preventDefault();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    function myFunction(id) {
+        var _startDate = document.getElementById("SelectedDate").value;
+        var data = {
+            startdate: _startDate
+        }
+
+        $.ajax({
+            url: '/MatchFixtures/Display',
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function () { }
+        });
+    }
+</script>
+
+
