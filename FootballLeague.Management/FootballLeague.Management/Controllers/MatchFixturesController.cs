@@ -106,6 +106,7 @@ namespace FootballLeague.Management.Controllers
         [HttpPost]
         public ActionResult Save()
         {
+            string message = "";
             if (ModelState.IsValid)
             {
                 List<MatchFixture> listFixture =  Session["fixturesList"] as List<MatchFixture> ;
@@ -129,12 +130,16 @@ namespace FootballLeague.Management.Controllers
                             }
                             transaction.Commit();
                             ModelState.Clear();
+                            message = "Match Fixtures Saved Succesfully";
+                            TempData["JavascriptFunction"]= string.Format("ShowSuccessMsg('{0}');", message);
                             return RedirectToAction("Display","Team");
 
                         }
                         catch (Exception ex)
                         {
-                            ViewBag.Success = "Sorry!!..Couldnt Edit the Teams..Please try again later";
+
+                            message = "Error occured while saving fixtures";
+                            ViewBag.JavaScriptFunction = string.Format("ShowFailure('{0}');", message);
                             transaction.Rollback();
                             return View();
                         }

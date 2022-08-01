@@ -90,39 +90,29 @@
 <div>
     @Html.ActionLink("Back to List", "Display")
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
         function Validation() {
-            if ($("#awayjersey").val() == $("#homejersey").val()) {
-                alert("Home and Away Jersey color cannot be same");
-                event.preventDefault();
-                return false;
-            }
-            else {
-                return true;
+            if ($("#awayjersey").val() != "" && $("#homejersey").val()!="")
+            {
+                if ($("#awayjersey").val() == $("#homejersey").val()) {
+                    alert("Home and Away Jersey color cannot be same");
+                    event.preventDefault();
+                    return false;
+                }
+
+                else {
+                    return true;
+                }
             }
         }
-        function ShowSuccessMsg() {
-            //toastr.success("New Team Added Successfully .");
-            alert("New Team Added Succesfully");
-        };
-        function ShowFailure() {
-            alert("Failed to add New Team")
-        };
-        //$(document).ready(function () {
-        //    $("#create").click(function () {
-        //        if ($("#awayjersey").val() == $("#homejersey").val()) {
-        //            alert("Home and Away Jersey color cannot be same");
-        //        }
-        //    });
-        //});
     </script>
 }
 @if (ViewBag.JavaScriptFunction != null)
 {
     <script type="text/javascript">
+
         @Html.Raw(ViewBag.JavaScriptFunction)
     </script>
 }

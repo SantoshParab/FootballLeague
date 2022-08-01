@@ -17,12 +17,12 @@ namespace FootballLeague.Management.Controllers
         // GET: Team
         public ActionResult Display()
         {
-
+            ViewBag.JavaScriptFunction = TempData["JavascriptFunction"];
             using (var context = new leagueDBContext())
             {
                 try
                 {
-                    var teams = context.Teams.ToList();                
+                    var teams = context.Teams.ToList();
                     return View(teams);
 
                 }
@@ -43,6 +43,7 @@ namespace FootballLeague.Management.Controllers
         [HttpPost]
         public ActionResult Create(Team team)
         {
+            string message = "";
             if (ModelState.IsValid)
             {
                 using (var context = new leagueDBContext())
@@ -51,29 +52,43 @@ namespace FootballLeague.Management.Controllers
                     {
                         try
                         {
-                            if (team.AwayJerseyColor != team.HomeJerseyColor)
+                            Team savedTeam = context.Teams.FirstOrDefault(x => x.TeamName == team.TeamName.ToLower());
+                            if (!string.IsNullOrEmpty(savedTeam.TeamName))
                             {
-                                team.Created = DateTime.Now;
-                                team.Modified = DateTime.Now;
-                                context.Teams.Add(team);
-                                context.SaveChanges();
-                                if (team.TeamID > 0)
-                                {
-                                    transaction.Commit();
-                                    ViewBag.JavaScriptFunction = "ShowSuccessMsg();";
-                                }
-                                ModelState.Clear();
-                                return RedirectToAction("Display");
+                                message = "Team Name already registered";
+                                ViewBag.JavaScriptFunction = string.Format("ShowFailure('{0}');", message);
+                                return View();
                             }
                             else
                             {
-                                ViewBag.JavaScriptFunction = string.Format("ShowFailure('{0}');");                                 
-                                return View();
+                                if (team.AwayJerseyColor != team.HomeJerseyColor)
+                                {
+                                    team.Created = DateTime.Now;
+                                    team.Modified = DateTime.Now;
+                                    context.Teams.Add(team);
+                                    context.SaveChanges();
+                                    if (team.TeamID > 0)
+                                    {
+                                        transaction.Commit();
+                                        message = "New Team Registered Successfully";
+                                        ViewBag.JavaScriptFunction = string.Format("ShowSuccessMsg('{0}');", message);
+                                    }
+                                    ModelState.Clear();
+                                    return View();
+                                    //return RedirectToAction("Display");
+                                }
+                                else
+                                {
+
+                                    return View();
+                                }
                             }
 
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            message = "Error occured while registering..Please try again later";
+                            ViewBag.JavaScriptFunction = string.Format("ShowFailure('{0}');", message);
                             //ViewBag.JavaScriptFunction = string.Format("ShowErrorMessage('{0}');", "Sorry!!..Couldnt Edit the Teams..Please try again later");
                             transaction.Rollback();
                             return View();
@@ -88,6 +103,7 @@ namespace FootballLeague.Management.Controllers
         [HttpPost]
         public ActionResult Edit(int id, Team objTeam)
         {
+            string message = "";
             if (ModelState.IsValid)
             {
                 using (leagueDBContext context = new leagueDBContext())
@@ -96,18 +112,19 @@ namespace FootballLeague.Management.Controllers
                     {
                         try
                         {
-
                             objTeam.Modified = DateTime.Now;
                             context.Entry(objTeam).State = EntityState.Modified;
                             context.SaveChanges();
                             transaction.Commit();
                             ModelState.Clear();
+                            message = "Team Details Changes Succesfully";
+                            TempData["JavascriptFunction"] = string.Format("ShowSuccessMsg('{0}');", message);
                             return RedirectToAction("Display");
-
                         }
                         catch (Exception ex)
                         {
-                            ViewBag.Success = "Sorry!!..Couldnt Edit the Teams..Please try again later";
+                            message = "Error occured while registering..Please try again later";
+                            ViewBag.JavaScriptFunction = string.Format("ShowFailure('{0}');", message);
                             transaction.Rollback();
                             return View();
                         }
