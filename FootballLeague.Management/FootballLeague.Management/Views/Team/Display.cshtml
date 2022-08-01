@@ -10,7 +10,10 @@
     @Html.ActionLink("Register Team Here", "Create")
 </p>
 <p>
-@Html.ActionLink("Generate Fixture","Create", "MatchFixtures")
+    @if (Model.Any())
+    {
+        @Html.ActionLink("Generate Fixture", "Create", "MatchFixtures")
+    }
 </p>
 <table class="table">
     <tr>

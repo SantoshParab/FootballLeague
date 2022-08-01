@@ -24,9 +24,16 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(".datepicker").datepicker({
-            dateFormat: "dd-mm-yy",
+            dateformat:'dd/mm/yy',
             changemonth: true,
-            changeyear: true
+            changeyear: true,
+            setDefaultDate:true,
+            onSelect:function(date)
+            {
+                var splitDate = date.split("/"),
+                    newdate = splitDate[1] + "-" + splitDate[0] + "-" + splitDate[2];
+                this.value = newdate;
+            }
         });
     });
     $(".datepicker").datepicker({ minDate: 0 });

@@ -60,21 +60,21 @@ namespace FootballLeague.Management.Controllers
                                 if (team.TeamID > 0)
                                 {
                                     transaction.Commit();
-                                    ViewBag.Success = "Team Registered SuccessFully";
+                                    ViewBag.JavaScriptFunction = "ShowSuccessMsg();";
                                 }
                                 ModelState.Clear();
                                 return RedirectToAction("Display");
                             }
                             else
                             {
-                                ViewBag.Success = "Home and Away Jersey Color cannot be same";
+                                ViewBag.JavaScriptFunction = string.Format("ShowFailure('{0}');");                                 
                                 return View();
                             }
 
                         }
                         catch
                         {
-                            ViewBag.Success = "Sorry!!..Couldnt Edit the Teams..Please try again later";
+                            //ViewBag.JavaScriptFunction = string.Format("ShowErrorMessage('{0}');", "Sorry!!..Couldnt Edit the Teams..Please try again later");
                             transaction.Rollback();
                             return View();
                         }

@@ -16,16 +16,20 @@ namespace FootballLeague.Management.Models
         public int FixtureID { get; set; }
         public int HomeTeamID { get; set; }
         public int AwayTeamID { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime MatchDate { get; set; }
         public DateTime Created { get; set; }
 
+        [NotMapped]
         public string HomeTeam { get; set; }
-
+        [NotMapped]
         public string AwayTeam { get; set; }
+        [NotMapped]
         public string HomeJerseyColor { get; set; }
-
+        [NotMapped]
         public string AwayJerseyColor { get; set; }
-
+        [NotMapped]
         public string GroundName { get; set; }
     }
 

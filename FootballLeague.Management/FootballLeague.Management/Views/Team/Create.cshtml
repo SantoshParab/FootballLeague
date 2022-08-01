@@ -1,7 +1,7 @@
 ﻿@model FootballLeague.Management.Models.Team
 
 @{
-    ViewBag.Title = "Registration";
+    ViewBag.Title = "Football Laegue";
 }
 
 <h2>Register Team</h2>
@@ -42,7 +42,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.AwayJerseyColor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.AwayJerseyColor, new { htmlAttributes = new { @class = "form-control" ,@id="awayjersey" } })
+                @Html.EditorFor(model => model.AwayJerseyColor, new { htmlAttributes = new { @class = "form-control", @id = "awayjersey" } })
                 @Html.ValidationMessageFor(model => model.AwayJerseyColor, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -81,7 +81,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit"id="create" onsubmit="event.preventDefault(); Validation();"  value="Create" class="btn btn-default" />
+                <input type="submit" id="create" onclick="Validation()" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -104,12 +104,25 @@
                 return true;
             }
         }
+        function ShowSuccessMsg() {
+            //toastr.success("New Team Added Successfully .");
+            alert("New Team Added Succesfully");
+        };
+        function ShowFailure() {
+            alert("Failed to add New Team")
+        };
         //$(document).ready(function () {
         //    $("#create").click(function () {
         //        if ($("#awayjersey").val() == $("#homejersey").val()) {
         //            alert("Home and Away Jersey color cannot be same");
-        //        } 
+        //        }
         //    });
         //});
+    </script>
+}
+@if (ViewBag.JavaScriptFunction != null)
+{
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.JavaScriptFunction)
     </script>
 }

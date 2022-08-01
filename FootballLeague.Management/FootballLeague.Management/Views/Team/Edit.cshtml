@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Team</h4>
         <hr />
@@ -36,7 +36,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.HomeJerseyColor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.HomeJerseyColor, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.HomeJerseyColor, new { htmlAttributes = new { @class = "form-control", @id = "homejersey" } })
                 @Html.ValidationMessageFor(model => model.HomeJerseyColor, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -44,7 +44,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.AwayJerseyColor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.AwayJerseyColor, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.AwayJerseyColor, new { htmlAttributes = new { @class = "form-control", @id = "awayjersey" } })
                 @Html.ValidationMessageFor(model => model.AwayJerseyColor, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="form-group invisible" >
+        <div class="form-group invisible">
             @Html.LabelFor(model => model.Created, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Created, new { htmlAttributes = new { @class = "form-control" } })
@@ -74,25 +74,38 @@
         </div>
 
         @*<div class="form-group">
-            @Html.LabelFor(model => model.Modified, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Modified, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Modified, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+                @Html.LabelFor(model => model.Modified, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Modified, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Modified, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" onclick="Validation()" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Display")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+<script type="text/javascript">
+    function Validation() {
+        if ($("#awayjersey").val() == $("#homejersey").val()) {
+            alert("Home and Away Jersey color cannot be same");
+            event.preventDefault();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+</script>
+

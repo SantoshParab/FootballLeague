@@ -19,7 +19,7 @@ namespace FootballLeague.Management.Controllers
             List<MatchFixture> matchList = objGenerateFixture.GetMatches(startDate);
             matchList.Shufflelist();
             List<MatchFixture> fixtures = objGenerateFixture.SetupGame(matchList, startDate);
-
+           Session["fixturesList"] = fixtures;
             return View(fixtures);
            
         }
@@ -43,49 +43,15 @@ namespace FootballLeague.Management.Controllers
             try
             {
                 // TODO: Add insert logic here
-                DateTime startDate = Convert.ToDateTime(form["SelectedDate"]);
+                string selectedDate = (form["SelectedDate"]);
+                string[] selectedDateArray = selectedDate.Split('/');
+                DateTime startDate = new DateTime(Convert.ToInt32(selectedDateArray[2]), Convert.ToInt32(selectedDateArray[0]), Convert.ToInt32(selectedDateArray[1]),0,0,0);
                 return RedirectToAction("Display" ,new { startDate = startDate });
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
-        }
-
-        [HttpPost]
-        public ActionResult SaveFixture(IEnumerable<MatchFixture> fixturelist)
-        {
-            if (ModelState.IsValid)
-            {
-                using (leagueDBContext context = new leagueDBContext())
-                {
-                    using (DbContextTransaction transaction = context.Database.BeginTransaction())
-                    {
-                        try
-                        {
-                            foreach(MatchFixture match in fixturelist)
-                            {
-                                match.Created = DateTime.Now;
-                                context.Entry(match).State = EntityState.Modified;
-                                context.SaveChanges();                                
-                            }
-                            transaction.Commit();
-                            ModelState.Clear();
-                            return RedirectToAction("Create");
-
-                        }
-                        catch (Exception ex)
-                        {
-                            ViewBag.Success = "Sorry!!..Couldnt Edit the Teams..Please try again later";
-                            transaction.Rollback();
-                            return View();
-                        }
-                        
-
-                    }
-                }
-            }
-            return View();
         }
 
         // GET: MatchFixtures/Edit/5
@@ -130,6 +96,54 @@ namespace FootballLeague.Management.Controllers
             {
                 return View();
             }
+        }
+
+        //public ActionResult Save(FormCollection form)
+        //{
+        //    return View();
+        //}
+
+        [HttpPost]
+        public ActionResult Save()
+        {
+            if (ModelState.IsValid)
+            {
+                List<MatchFixture> listFixture =  Session["fixturesList"] as List<MatchFixture> ;
+                using (leagueDBContext context = new leagueDBContext())
+                {
+                    using (DbContextTransaction transaction = context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            foreach (MatchFixture match in listFixture)
+                            {
+                                MatchFixture objmatch = new MatchFixture();
+
+                                objmatch.HomeTeamID = match.HomeTeamID;
+                                objmatch.AwayTeamID = match.AwayTeamID;
+                                objmatch.MatchDate = match.MatchDate;
+                                objmatch.Created = DateTime.Now;
+
+                                context.Fixtures.Add(objmatch);
+                                context.SaveChanges();
+                            }
+                            transaction.Commit();
+                            ModelState.Clear();
+                            return RedirectToAction("Display","Team");
+
+                        }
+                        catch (Exception ex)
+                        {
+                            ViewBag.Success = "Sorry!!..Couldnt Edit the Teams..Please try again later";
+                            transaction.Rollback();
+                            return View();
+                        }
+
+
+                    }
+                }
+            }
+            return View();
         }
     }
 }
